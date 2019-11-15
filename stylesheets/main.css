@@ -263,12 +263,19 @@ p {
     fill: #FF810F;
 }
 
+/* Bar chart - line */
+path.line {
+	fill: none;
+}
+
 /* Map formatting */
 .map path {
     fill: #FFFFFF;
     stroke: #DDDDDD;
     stroke-width: 1px;
 }
+
+
 
 /* Map - mousover highlight */
 .map path:hover {
