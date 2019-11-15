@@ -1,4 +1,4 @@
-function makePlot2(data, response) {
+function makePlot4(data, response) {
 	
 	// setup
 	const bbox = d3.select("#chart").node().getBoundingClientRect();
@@ -10,6 +10,9 @@ function makePlot2(data, response) {
 	const plotWidth = width - margin.left - margin.right;
 	const plotHeight = height - margin.bottom - margin.top;
 	
+	const gutter = 10;
+	const plotCenter = plotWidth * 0.5;
+	
 	const svg = d3.select("#chart").select("svg");
 	
 	const DURATION = 1000;
@@ -17,91 +20,104 @@ function makePlot2(data, response) {
 	// create scales
 	
 	const xScale = d3.scaleLinear()
-		.domain(d3.extent(data, d => d.year))
-		.range([0, plotWidth - margin.right - margin.left]);
+		.domain([-1.5*d3.max(data, d => d.MYE), 1.5*d3.max(data, d => d.MYE)]).nice()
+		.range([0, plotWidth - margin.left - margin.right]);
 		
-	const yScale = d3.scaleLinear()
-		.domain(d3.extent(data, d => d.change)).nice()
-		.range([plotHeight, 0]);
+	const yScale = d3.scaleBand()
+		.domain(d3.map(data, d => d.age).keys())
+		.range([plotHeight, 0])
+		.paddingInner(0.2);
+	
+	const fillScale = d3.scaleOrdinal(d3.schemeAccent)
+		.domain(d3.map(data, d => d.gender).keys());
 	
 	
 	// x axis, label and grid
 	svg.select(".xAxis")
-	    .transition().duration(DURATION)
 		.attr("transform", `translate(${margin.left}, ${plotHeight + margin.top})`)
 		.call(d3.axisBottom(xScale)
-			.tickFormat(d3.format("d"))
+			.tickFormat(d => d >= 0 ? d3.format(",")(d) : d3.format(",")(-d))
 		);
 	
 	svg.select(".xGrid")
-		.transition().duration(DURATION)
 		.attr("transform", `translate(${margin.left}, ${margin.top})`)
 		.call(d3.axisLeft(xScale)
 			.tickValues([])
 		);
 	
 	svg.selectAll(".xLabel")
-	  .data([{"label": "Year"}])
-	    .transition().duration(DURATION)
+	  .data([{"label": "Persons"}])
 	  .text(d => d.label);
 	
 	// y axis, label and grid
 	svg.select(".yAxis")
-		.transition().duration(DURATION)
 		.attr("transform", `translate(${margin.left}, ${margin.top})`)
 		.call(d3.axisLeft(yScale)
-			.tickFormat(d3.format(".1%"))
-			.ticks(5)
+			.tickValues(d3.range(0, 100, 10))
 		);
 	
 	svg.select(".yGrid")
-		.transition().duration(DURATION)
 		.attr("transform", `translate(${margin.left}, ${margin.top})`)
 		.call(d3.axisLeft(yScale)
 			.tickFormat("")
-			.ticks(5)
+			.tickValues(d3.range(0, 100, 10))
 			.tickSize(-plotWidth + margin.right + margin.left)
 		);
 	
-	// line
+	// bars
 	const plot = svg.select("#plot");
-	
-	var line = d3.line()
-		.x(d => xScale(d.year))
-		.y(d => yScale(d.change));
 	
 	if (response.direction === "down") {
 		
-		plot.selectAll(".line")
-		  .datum(data)
-			.transition().duration(DURATION)
-			.attr("id", "chart2-line")
-			.attr("d", line)
-			.attr("stroke-dasharray", null)
-			.attr("stroke-dashoffset", null);
+		plot.selectAll(".line").remove();
+		
+		plot.selectAll(".bar")
+		  .data(data.filter(d => d.year === 2018)).enter()
+		    .append("rect")
+			.attr("class", "bar")
+			.attr("y", d => yScale(d.age))
+			.attr("height", yScale.bandwidth())
+			.attr("x", xScale(0))
+			.attr("width", 0)
+			.attr("fill", d => fillScale(d.gender))
+		  .transition().duration(DURATION)
+			.attr("x", d => (d.gender === "Males" ? xScale(-d.MYE) : xScale(0)))
+			.attr("width", d => xScale(0) - xScale(-d.MYE));
 			
-	} else {
-		
-		var lines = plot.selectAll(".line")
-		  .data([data]);
-		
-		lines.exit()
-			.transition().duration(DURATION)
-			.attr("opacity", 0)
-			.remove();
-		
-		lines.transition().duration(DURATION)
-			.attr("id", "chart2-line")
-			.attr("d", line)
-			.attr("stroke", "#313695");
-		
 	}
+	
+	// lines
+	const line = d3.line()
+		.x(d => d.gender === "Males" ? xScale(-d.MYE) : xScale(d.MYE))
+		.y(d => (yScale(d.age) + (0.5 * yScale.bandwidth())));
+	
+	var lineNest = d3.nest()
+		.key(d => d.gender)
+		.entries(data.filter(d => d.year === 2008));
+	
+		
+	if (response.direction === "down") {
+		
+		plot.selectAll(".line")
+		  .data(lineNest).enter()
+		    .append("path")
+			.attr("class", "line")
+			.attr("opacity", 0)
+			.attr("id", d => d.gender)
+			.attr("d", d => line(d.values))
+			.attr("stroke", "black")
+		  .transition().duration(DURATION)
+		    .attr("opacity", 1);
+	
+	}
+	
+	
 	
 	// title, caption
 	const header = svg.select("#header");
 	
 	header.selectAll(".chartTitle")
-	  .data([{"label": "Annual population change for Northern Ireland, mid-2002 to mid-2018"}])
+	  .data([{"label": "Northern Ireland population structure, mid-2008 and mid-2018"}])
 	    .transition().duration(DURATION)
 		.text(d => d.label)
 		.attr("x", 0)
@@ -122,39 +138,16 @@ function makePlot2(data, response) {
 		.attr("text-anchor", "start")
 		.attr("class", "captionText");
 	
-	// line labels
-	var labelData = data.filter(d => d.year === 2018);
+	
+	// remove line labels
 	
 	if (response.direction === "down") {
 		
 		plot.selectAll(".lineLabel")
-		  .data(labelData)
 		  .transition().duration(DURATION)
-			.attr("class", "lineLabel")
-			.text(d => d3.format(".1%")(d.change))
-			.attr("x", d => xScale(2018.2))
-			.attr("y", d => yScale(d.change))
-			.attr("dy", "0.4em");
-			
-	} else {
-		
-		plot.selectAll(".lineLabel")
-		  .transition().duration(DURATION)
-		    .attr("opacity", 0);
-		
-		plot.selectAll(".lineLabel")
-		  .data(labelData)
-			.join("text")
-			.attr("opacity", 0)
-			.attr("x", d => xScale(2018.2))
-			.attr("y", d => yScale(d.change))
-			.attr("dy", "0.4em")
-			.attr("fill", "black")
-			.text(d => d3.format(".1%")(d.change))
-		  .transition().duration(DURATION)
-			.attr("opacity", 1);
+		    .attr("opacity", 0)
+			.remove();
 			
 	}
-			
 		
 }

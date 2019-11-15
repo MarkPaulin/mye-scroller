@@ -47,7 +47,12 @@ function makePlot3(data, response) {
 		.attr("transform", `translate(${margin.left}, ${margin.top})`)
 		.call(d3.axisLeft(xScale)
 			.tickValues([])
-		);	
+		);
+	
+	svg.selectAll(".xLabel")
+	  .data([{"label": "Year"}])
+	    .transition().duration(DURATION)
+	  .text(d => d.label);
 	
 	// y axis, label and grid
 	svg.select(".yAxis")
@@ -95,6 +100,26 @@ function makePlot3(data, response) {
 			.attr("opacity", 0)
 		  .transition().duration(DURATION)
 		    .attr("opacity", 1);
+			
+	} else {
+		
+		plot.selectAll(".bar").remove();
+		plot.selectAll(".line").remove();
+		
+		var lines = plot.selectAll(".line")
+		  .data(nest);
+		 
+		lines.enter()
+		  .append("path")
+		    .attr("class", "line")
+		    .attr("id", d => d.key)
+			.attr("fill", "none")
+			.attr("d", d => line(d.values))
+			.attr("stroke", d => colourScale(d.key))
+			.attr("opacity", 0)
+		  .transition().duration(DURATION)
+		    .attr("opacity", 1);
+	
 	}
 	
 	// title, caption
@@ -131,6 +156,20 @@ function makePlot3(data, response) {
 		plot.selectAll(".lineLabel")
 		  .transition().duration(DURATION)
 		    .attr("opacity", 0);
+		
+		plot.selectAll(".lineLabel").data(labelData)
+		  .join("text")
+		    .attr("class", "lineLabel")
+			.text(d => d.component)
+			.attr("x", d => xScale(2018.2))
+			.attr("y", d => yScale(d.change))
+			.attr("dy", "0.4em")
+			.attr("fill", d => colourScale(d.component))
+			.attr("opacity", 0)
+		  .transition().duration(DURATION)
+		    .attr("opacity", 1);
+	
+	} else {
 		
 		plot.selectAll(".lineLabel").data(labelData)
 		  .join("text")
