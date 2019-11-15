@@ -47,7 +47,7 @@ function makePlot4(data, response) {
 	
 	svg.selectAll(".xLabel")
 	  .data([{"label": "Persons"}])
-	  .text(d => d.label);
+	    .text(d => d.label);
 	
 	// y axis, label and grid
 	svg.select(".yAxis")

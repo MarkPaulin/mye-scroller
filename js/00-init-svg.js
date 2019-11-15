@@ -53,7 +53,7 @@ function svg_init() {
 		.attr("transform", `translate(0, ${plotHeight + margin.bottom + 10})`)
 	  .text(d => d.label)
 		.attr("text-anchor", "middle")
-		.attr("x", (0.5 * (plotWidth + margin.left)))
+		.attr("x", (0.5 * plotWidth))
 		.attr("y", margin.top - 25);
 	
 	// Append plot, header, footer		----------------------------------------
