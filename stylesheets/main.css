@@ -1,0 +1,310 @@
+
+/***********************
+***** THEME COLORS *****
+***********************/
+
+.grey {
+    fill: #DDDDDD;
+}
+
+.purple {
+    fill: #5D2BF0;
+}
+
+.orange {
+    fill: #FF810F;
+}
+
+/************************
+***** DIV-LEVEL CSS *****
+************************/
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 1200px;
+}
+
+#intro,
+#outro {
+    padding: 0px 200px 0px 200px;
+}
+
+/*****************************
+***** SCROLLAMA SETTINGS *****
+*****************************/
+
+/* Adapted from The Pudding:
+https://pudding.cool/process/introducing-scrollama/ */
+
+#scroll {
+  position: relative;
+}
+
+.scroll__graphic {
+  position: -webkit-sticky;
+  position: sticky;
+
+  top: 0;
+  right: 0rem;
+  bottom: auto;
+  width: 100%;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+
+  /* background-color: #DDDDDD; */
+  /* border: 1px solid #000000; */
+}
+
+.scroll__graphic .plotArea.is-active{
+    position: fixed;
+    right: 1rem;
+    top: 50%;
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+
+    opacity: 1;
+    z-index: 1;
+
+    /* background-color: #FFFFFF;
+    border: 1px solid red; */
+}
+
+.scroll__graphic .plotArea {
+    position: fixed;
+    right: 1rem;
+    top: 50%;
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+
+    opacity: 0;
+    z-index: -1;
+
+    /* background-color: #FFFFFF;
+    border: 1px solid blue; */
+}
+
+.scroll__text {
+    position: relative;
+    padding: 0 1rem;
+    max-width: 30rem;
+}
+
+.step {
+    opacity: 0.2;
+    padding: 1rem;
+
+    /* transform: translate(0, -500px);
+    border: 1px solid red; */
+}
+
+.step.is-active {
+    opacity: 1;
+    /* border: 2px solid green; */
+}
+
+/***************
+***** TEXT *****
+***************/
+
+/* Page title */
+h1 {
+    font-family: sans-serif;
+    font-size: 36px;
+    font-family: sans-serif;
+}
+
+/* Section titles */
+h2 {
+    font-family: sans-serif;
+    font-size: 24px;
+    font-family: sans-serif;
+}
+
+/* Outro section titles */
+h3 {
+    font-family: sans-serif;
+    font-size: 16px;
+    font-family: sans-serif;
+}
+
+/* Body text */
+p {
+    font-family: sans-serif;
+    font-size: 16px;
+}
+
+/* SCROLL TO CONTINUE message */
+#scrollMsg {
+    font-family: sans-serif;
+    font-size: 24px;
+    text-align: center;
+    color: #DDDDDD;
+}
+
+/* Error message on chart load */
+#errMsg {
+    font-family: sans-serif;
+    font-size: 24px;
+    text-align: center;
+}
+
+/* Chart titles */
+.chartTitle {
+    font-family: sans-serif;
+    font-size: 18px;
+    color: #0F0F0F;
+}
+
+/* Chart subtitles */
+.subTitle1,
+.subTitle2 {
+    font-family: sans-serif;
+    font-size: 14px;
+    color: #3F3F3F;
+}
+
+/* Chart axis titles */
+.axis {
+    font-family: sans-serif;
+    font-size: 12px;
+    color: #000000;
+}
+
+/* Chart axis labels */
+.xLabel,
+.yLabel {
+    font-family: sans-serif;
+    font-size: 12px;
+    color: #000000;
+}
+
+/* Chart caption text */
+.captionText {
+    font-family: sans-serif;
+	font-style: italic;
+    font-size: 10px;
+}
+
+/* Line chart labels */
+.lineLabel {
+    font-family: sans-serif;
+    font-size: 12px;
+}
+
+/* Dot plot labels */
+.pointLabel {
+    font-family: sans-serif;
+    font-size: 10px;
+}
+
+/* Bar chart labels */
+.barLabels {
+    font-family: sans-serif;
+    font-size: 12px;
+    color: #000000;
+}
+
+/* Legend */
+.sizeLegend,
+.colorLegend {
+    font-family: sans-serif;
+    font-size: 12px;
+    color: #000000;
+}
+
+/* On-chart annotation text */
+.annotationText {
+    font-family: sans-serif;
+    font-size: 10px;
+    fill: #BBBBBB;
+}
+
+/*************************
+***** CHART ELEMENTS *****
+*************************/
+
+/* Tick lines - transparent */
+.tick line,
+.domain {
+    color: #FFFFFF;
+}
+
+/* Plot area gridlines */
+.xGrid line,
+.yGrid line {
+    stroke: #DDDDDD;
+    stroke-opacity: 0.5;
+}
+
+/* Outer paths */
+.xGrid path,
+.yGrid path {
+    stroke-width: 0;
+}
+
+/* Bar chart - selected bars */
+.selectedRect {
+    stroke: #000000;
+    stroke-width: 1.5px;
+    fill: #FF810F;
+}
+
+/* Map formatting */
+.map path {
+    fill: #FFFFFF;
+    stroke: #DDDDDD;
+    stroke-width: 1px;
+}
+
+/* Map - mousover highlight */
+.map path:hover {
+    fill: limegreen;
+}
+
+/* Map - selected points */
+.selectedPoint {
+    stroke: #000000;
+    stroke-width: 1.5px;
+}
+
+/* Map - tooltip box */
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    dominant-baseline: central;
+
+    padding: 5px;
+
+    font-family: "Asap";
+    font-size: 12px;
+    background: #FFFFFF;
+
+    border: 2px;
+    pointer-events: none;
+}
+
+/* dotplot annotation line */
+.dividingLine {
+    stroke: #BBBBBB;
+    stroke-dasharray: 10;
+}
+
+/* scatterplot regression line */
+.regressionLine {
+    stroke: #000000;
+    stroke-dasharray: 10;
+}

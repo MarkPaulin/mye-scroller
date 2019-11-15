@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>2018 Mid-year Population Estimates for Northern Ireland</title>
+		<link rel="stylesheet" type="text/css" href="stylesheets/main.css">
+	</head>
+	<body>
+		<section id="intro">
+			<h1>2018 Mid-year Population Estimates for Northern Ireland</h1>
+			<p><i>Summary</i></p>
+			<h2>Introduction</h2>
+			<p>Not really got much to say, the population grew a bit, generally not that exciting.</p>
+			<p>But I feel there ought to be more than one paragraph here.</p>
+			<p id="scrollMsg">
+				<br />scroll to continue...<br />
+				&#9660;<br />
+                &#9660;<br />
+                &#9660;
+            </p>
+		</section>
+		<section id="scroll">
+			<div class="scroll__graphic sticky">
+				<div class="plotArea is-active" id="chart"></div>
+				<div class="plotArea" id="mapPlot"></div>
+			</div>
+			<div class="scroll__text">
+				<div class="step is-active" data-step="0">
+					<h2>Northern Ireland's population continues to increase</h2>
+					<p>On 30 June 2018, Northern Ireland's population was estimated to be 1.88 million people.</p>
+					<p>Between mid-2017 and mid-2018, the population of Northern Ireland increased by 10,800 people, or 0.6%. Just over half the population were female, with 955,400 females (50.8%) compared to 926,200 males (49.2%).</p>
+				</div>
+				<div class="step" data-step="1">
+					<p>Over the last 25 years, the annual rate of population change in Northern Ireland has fluctuated between a low of 0.1% in 1999 and a high of 1.1% in 2007.</p>
+					<p>Over the decade from mid-2008 to mid-2018, the population of Northern Ireland has increased by a total of 102,500 people, with an average year-on-year increase of 0.6%.</p>
+				</div>
+				<div class="step" data-step="2">
+					<p>Different bits cause changes and things.</p>
+				</div>
+			</div>
+		</section>
+	
+	
+	
+	<script type="text/javascript" src="js/lib/d3.min.js"></script>
+	<script src='https://unpkg.com/scrollama'></script>
+	<script src="js/lib/stickyfill.min.js"></script>
+	
+	<script text="text/javascript" src="js/00-init-svg.js"></script>
+	<script text="text/javascript" src="js/01-linechart.js"></script>
+	<script text="text/javascript" src="js/02-linechart.js"></script>
+	<script text="text/javascript" src="js/03-linechart.js"></script>
+	
+	<script text="text/javascript" src="js/script.js"></script>
+	</body>
+</html>
