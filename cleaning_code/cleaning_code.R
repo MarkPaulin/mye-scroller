@@ -97,3 +97,15 @@ chart3 <- raw_coc %>%
   arrange(year, desc(component))
 
 write_json(chart3, here("..", "data", "clean_data", "chart3.json"))  
+
+# chart 4, age and gender, 2008 and 2018    ------------------------------------
+
+chart4 <- raw_sya %>% 
+  filter(
+    area == "1. Northern Ireland",
+    year %in% c(2008, 2018),
+    gender != "All persons"
+  ) %>% 
+  select(year, gender, age, MYE)
+
+write_json(chart4, here("..", "data", "clean_data", "chart4.json"))
