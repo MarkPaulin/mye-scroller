@@ -5,19 +5,24 @@ library(readxl)
 library(here)
 library(jsonlite)
 
+# create raw_data directory           ------------------------------------------
+
+if (!dir.exists(here("..", "data", "raw_data"))) {
+  dir.create(here("..", "data", "raw_data"))
+}
 
 # Chart 1, population 1993 to 2018    ------------------------------------------
 # Read in data downloaded from NISRA website
 
-if (!file.exists(here("..", "data", "raw_data", "MYE18_SYA.xlsx"))) {
-  download.file(
-    "https://www.nisra.gov.uk/sites/nisra.gov.uk/files/publications/MYE18_SYA.xlsx",
-    here("..", "data", "raw_data", "MYE18_SYA.xlsx"),
-    mode = "wb"
-  )
-}
-
 if (!file.exists(here("..", "data", "clean_data", "mye18_sya.csv"))) {
+  
+  if (!file.exists(here("..", "data", "raw_data", "MYE18_SYA.xlsx"))) {
+    download.file(
+      "https://www.nisra.gov.uk/sites/nisra.gov.uk/files/publications/MYE18_SYA.xlsx",
+      here("..", "data", "raw_data", "MYE18_SYA.xlsx"),
+      mode = "wb"
+    )
+  }
   
   raw_sya <- read_xlsx(here("..", "data", "raw_data", "MYE18_SYA.xlsx"), sheet = 2)
   
@@ -63,15 +68,15 @@ write_json(chart2, here("..", "data", "clean_data", "chart2.json"))
 
 # chart 3, components of change 2001 to 2018    --------------------------------
 
-if (!file.exists(here("..", "data", "raw_data", "MYE18_CoC.xlsx"))) {
-  download.file(
-    "https://www.nisra.gov.uk/sites/nisra.gov.uk/files/publications/MYE18_CoC.xlsx",
-    here("..", "data", "raw_data", "MYE18_CoC.xlsx"),
-    mode = "wb"
-  )
-}
-
 if (!file.exists(here("..", "data", "clean_data", "mye18_coc.csv"))) {
+  
+  if (!file.exists(here("..", "data", "raw_data", "MYE18_CoC.xlsx"))) {
+    download.file(
+      "https://www.nisra.gov.uk/sites/nisra.gov.uk/files/publications/MYE18_CoC.xlsx",
+      here("..", "data", "raw_data", "MYE18_CoC.xlsx"),
+      mode = "wb"
+    )
+  }
   
   raw_coc <- read_xlsx(here("..", "data", "raw_data", "MYE18_CoC.xlsx"), sheet = 2)
   
@@ -109,3 +114,16 @@ chart4 <- raw_sya %>%
   select(year, gender, age, MYE)
 
 write_json(chart4, here("..", "data", "clean_data", "chart4.json"))
+
+# chart 5, population by lgd 2018           ------------------------------------
+
+chart5 <- raw_sya %>% 
+  filter(
+    str_detect(area, "LGD2014"),
+    year == 2018,
+    gender == "All persons"
+  ) %>% 
+  group_by(area_code, area_name) %>% 
+  summarise(MYE = sum(MYE))
+
+write_json(chart5, here("..", "data", "clean_data", "chart5.json"))
