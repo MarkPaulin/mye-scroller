@@ -315,3 +315,11 @@ div.tooltip {
     stroke: #000000;
     stroke-dasharray: 10;
 }
+
+/***************
+***** MAP ******
+***************/
+
+.lgd-hover {
+  fill-opacity: 0.75;
+}
