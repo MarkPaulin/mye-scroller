@@ -219,8 +219,7 @@ p {
 }
 
 /* Legend */
-.sizeLegend,
-.colorLegend {
+.colourLegend {
     font-family: sans-serif;
     font-size: 12px;
     color: #000000;

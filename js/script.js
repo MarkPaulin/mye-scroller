@@ -64,6 +64,10 @@ function handleStepEnter(response) {
 		case 3:
 			makePlot4(data_4, response);
 			break;
+		case 4:
+		  toggleChart(response);
+			enterPlot5(map_data, data_5);
+			break;
 
 	}
 
@@ -71,7 +75,19 @@ function handleStepEnter(response) {
 }
 
 function toggleChart(response) {
-	// this is for switching between charts and maps
+
+	chart.classed("is-active", false);
+
+	if (response.index === 4) {
+		chart.classed("is-active", function(d, i) {
+			return i === 1;
+		});
+	} else {
+		chart.classed("is-active", function(d, i) {
+			return i === 0;
+		});
+	}
+
 }
 
 function setupStickyfill() {
@@ -104,13 +120,17 @@ Promise.all([
 	d3.json("data/clean_data/chart1.json"),
 	d3.json("data/clean_data/chart2.json"),
 	d3.json("data/clean_data/chart3.json"),
-	d3.json("data/clean_data/chart4.json")
+	d3.json("data/clean_data/chart4.json"),
+	d3.json("data/clean_data/simple_lgd.geojson"),
+	d3.json("data/clean_data/chart5.json")
 ]).then(results => {
 
 	this.data_1 = results[0];
 	this.data_2 = results[1];
 	this.data_3 = results[2];
-	this.data_4 = results[3]
+	this.data_4 = results[3];
+	this.map_data = results[4];
+	this.data_5 = results[5];
 
 	scroll_init();
 	svg_init();
