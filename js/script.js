@@ -12,31 +12,31 @@ var step = text.selectAll(".step");
 var scroller = scrollama();
 
 function handleResize() {
-	
+
 	// update height of step elements
 	var stepHeight = Math.floor(window.innerHeight * 0.9);
 	step.style("height", stepHeight + "px");
-	 
+
 	// update height of graphic element
 	var bodyWidth = d3.select("body").node().offsetWidth;
-	 
+
 	graphic.style("height", window.innerHeight + "px");
-	
+
 	// update width of chart
 	var chartMargin = 10;
 	var textWidth = text.node().offsetWidth;
 	var chartWidth = graphic.node().offsetWidth - textWidth - chartMargin;
 	var chartHeight = Math.floor(chartWidth * 0.66);
-	
+
 	chart.style("width", chartWidth + "px")
 		.style("height", chartHeight + "px");
-	
+
 	// update dimensions of svg elements
 	var svg = d3.select(".plotArea is-active").select("svg");
-	
+
 	svg.attr("width", chartWidth + "px")
 		.attr("height", chartHeight + "px");
-	
+
 	// tell scrollama to update new element dimensions
 	scroller.resize();
 }
@@ -48,7 +48,7 @@ function handleStepEnter(response) {
 	step.classed("is-active", function(d, i) {
 		return i === response.index;
 	});
-	
+
 	// update svgs
 	// put in functions here
 	switch(response.index) {
@@ -64,9 +64,9 @@ function handleStepEnter(response) {
 		case 3:
 			makePlot4(data_4, response);
 			break;
-		
+
 	}
-	
+
 	handleResize();
 }
 
@@ -74,27 +74,27 @@ function toggleChart(response) {
 	// this is for switching between charts and maps
 }
 
-function setupStickfill() {
+function setupStickyfill() {
 	d3.selectAll(".sticky").each(function() {
 		Stickyfill.add(this);
 	});
 }
 
 function scroll_init() {
-	setupStickfill();
-	
+	setupStickyfill();
+
 	handleResize();
-	
+
 	scroller.setup({
 			container: document.querySelector("#scroll"),
 			graphic: ".scroll__graphic",
 			text: ".scroll__text",
 			step: ".scroll__text .step",
 			offset: 0.5,
-			degub: false,
+			debug: false,
 		})
 		.onStepEnter(handleStepEnter);
-	
+
 	window.addEventListener("resize", handleResize);
 }
 
@@ -106,12 +106,12 @@ Promise.all([
 	d3.json("data/clean_data/chart3.json"),
 	d3.json("data/clean_data/chart4.json")
 ]).then(results => {
-	
+
 	this.data_1 = results[0];
 	this.data_2 = results[1];
 	this.data_3 = results[2];
 	this.data_4 = results[3]
-	
+
 	scroll_init();
 	svg_init();
 
@@ -119,5 +119,3 @@ Promise.all([
 	console.log(error);
 	document.getElementById("errMsg").innerHTML = error;
 });
-
-
