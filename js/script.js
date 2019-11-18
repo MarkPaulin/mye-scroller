@@ -65,7 +65,7 @@ function handleStepEnter(response) {
 			makePlot4(data_4, response);
 			break;
 		case 4:
-		  toggleChart(response);
+		    toggleChart(response);
 			enterPlot5(map_data, data_5);
 			break;
 
@@ -114,14 +114,12 @@ function scroll_init() {
 	window.addEventListener("resize", handleResize);
 }
 
-
-// load data (need some data first)
 Promise.all([
 	d3.json("data/clean_data/chart1.json"),
 	d3.json("data/clean_data/chart2.json"),
 	d3.json("data/clean_data/chart3.json"),
 	d3.json("data/clean_data/chart4.json"),
-	d3.json("data/clean_data/simple_lgd.geojson"),
+	d3.json("data/clean_data/simple_lgd.json"),
 	d3.json("data/clean_data/chart5.json")
 ]).then(results => {
 
