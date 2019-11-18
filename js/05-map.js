@@ -12,17 +12,23 @@ function enterPlot5(map_data, data) {
 	const svg = d3.select("#mapPlot").select("svg");
 
 	const DURATION = 1000;
+	
+	const map = topojson.feature(map_data, map_data.objects.simple_lgd);
+	
+	var plot = svg.append("g")
+	    .attr("id", "plot")
+		.attr("transform", `translate(${margin.left}, ${margin.top})`);
 
   // scale, projections, paths
+  const thresholds = [110000, 125000, 140000, 155000, 170000, 185000]
+  
   const colourScale = d3.scaleThreshold()
-      .domain([110000, 125000, 140000, 155000, 170000, 185000])
+      .domain(thresholds)
       .range(d3.schemeBlues[7]);
 
   const projection = d3.geoAlbers()
-      .center([-1, 54.8])
       .rotate([4.4, 0])
-      .parallels([50, 60])
-      .scale(1200 * 12);
+	  .fitSize([plotWidth - margin.left - margin.right, plotHeight], map);
 
   const path = d3.geoPath()
       .projection(projection);
@@ -45,8 +51,8 @@ function enterPlot5(map_data, data) {
   }
 
   // add in LGDs
-  svg.selectAll("path.lgd")
-    .data(map_data.features)
+  plot.selectAll("path.lgd")
+    .data(map.features)
       .enter()
     .append("path")
       .attr("opacity", 0)
@@ -57,27 +63,49 @@ function enterPlot5(map_data, data) {
       .on("mouseover", function() {
         d3.select(this).classed("lgd-hover", true);
         let area_code = d3.select(this).attr("id");
-
+  
         d3.select("#lgd-description").html(areaDescription(area_code));
       })
       .on("mouseout", function() {
         d3.select(this).classed("lgd-hover", false)
         d3.select("#lgd-description").html("");
       })
-    .transition().duration(1000)
+    .transition().duration(DURATION)
       .attr("opacity", 1);
 
-  // and colour Legend
-  var colourLegend = d3.legendColor()
-      .labelFormat(d3.format(","))
-      .labels(d3.legendHelpers.thresholdLabels)
-      .scale(colourScale);
-
-  svg.append("g")
-    .attr("class", "colourLegend")
-    .attr("transform", "translate(0, 100)")
-    .call(colourLegend);
-
+  // and colour legend
+  // adapted from https://bl.ocks.org/mbostock/4573883
+  var formatNumber = d3.format(",.0f");
+  
+  var legendScale = d3.scaleLinear()
+      .domain(d3.extent(data, d => d.MYE))
+	  .range([0, 500]);
+	
+  var legendAxis = d3.axisRight(legendScale)
+      .tickValues(thresholds.slice(1))
+	  .tickSize(10)
+	  .tickFormat(formatNumber);
+  
+  var legend = plot.append("g")
+      .attr("class", "legendColour")
+	  .attr("transform", `translate(10, 20)`)
+	  .call(legendAxis);
+  
+  legend.select(".domain").remove();
+  
+  legend.selectAll(".rect")
+      .data(colourScale.range().map(function(colour) {
+		  var d = colourScale.invertExtent(colour);
+		  if (d[0] == null) d[0] = legendScale.domain()[0];
+		  if (d[1] == null) d[1] = 200000;
+		  return d;
+	  }))
+	  .enter().insert("rect", ".tick")
+	    .attr("width", 8)
+		.attr("y", d => legendScale(d[0]))
+		.attr("height", d => legendScale(d[1]) - legendScale(d[0]))
+		.attr("fill", d => colourScale(d[0]));
+  
   // titles
   const header = svg.append("g").attr("id", "header");
 
