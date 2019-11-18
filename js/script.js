@@ -12,7 +12,7 @@ var step = text.selectAll(".step");
 var scroller = scrollama();
 
 function handleResize() {
-
+	
 	// update height of step elements
 	var stepHeight = Math.floor(window.innerHeight * 0.9);
 	step.style("height", stepHeight + "px");
